@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { uploadToR2 } from "@/lib/r2";
+import { setJob } from "@/lib/redis";
+import { startRestoration } from "@/lib/replicate";
 import { randomUUID } from "crypto";
 
 export const maxDuration = 60;
@@ -25,13 +27,20 @@ export async function POST(req: NextRequest) {
     imageUrls.push(url);
   }
 
-  // Kick off async processing — fire and forget
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || `https://${req.headers.get("host")}`;
-  fetch(`${baseUrl}/api/process`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ jobId, imageUrls, email, music }),
-  }).catch(() => {});
+  // Save initial job state to Redis
+  await setJob(jobId, {
+    email,
+    music,
+    imageUrls,
+    restoredUrls: [],
+    clipUrls: [],
+    total: images.length,
+    phase: "restoring",
+    currentIndex: 0,
+  });
+
+  // Kick off restoration of the first image — webhook chain handles the rest
+  await startRestoration(jobId, imageUrls[0], 0);
 
   return NextResponse.json({ jobId });
 }
