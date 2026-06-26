@@ -15,10 +15,12 @@ export async function startRestoration(jobId: string, imageUrl: string, index: n
 export async function startAnimation(jobId: string, imageUrl: string, index: number): Promise<void> {
   const webhookUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/api/webhook?jobId=${jobId}&index=${index}&step=animate`;
   await replicate.predictions.create({
-    model: "wavespeedai/wan-2.1-i2v-480p",
+    version: "3f0457e4619daac51203dedb472816fd4af51f3149fa7a9e0b5ffcf1b8172438",
     input: {
-      image: imageUrl,
-      prompt: "Gentle cinematic life, subtle movement, soft natural lighting, warm nostalgic feel",
+      input_image: imageUrl,
+      video_length: "25_frames_with_svd_xt",
+      frames_per_second: 6,
+      motion_bucket_id: 60,
     },
     webhook: webhookUrl,
     webhook_events_filter: ["completed"],
