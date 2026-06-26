@@ -15,7 +15,7 @@ export async function startRestoration(jobId: string, imageUrl: string, index: n
 export async function startAnimation(jobId: string, imageUrl: string, index: number): Promise<void> {
   const webhookUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/api/webhook?jobId=${jobId}&index=${index}&step=animate`;
   await replicate.predictions.create({
-    version: "wavespeedai/wan-2.1-i2v-480p",
+    model: "wavespeedai/wan-2.1-i2v-480p",
     input: {
       image: imageUrl,
       prompt: "Gentle cinematic life, subtle movement, soft natural lighting, warm nostalgic feel",

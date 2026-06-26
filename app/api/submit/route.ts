@@ -18,29 +18,34 @@ export async function POST(req: NextRequest) {
 
   const jobId = randomUUID();
 
-  // Upload all images to R2
-  const imageUrls: string[] = [];
-  for (const image of images) {
-    const buffer = Buffer.from(await image.arrayBuffer());
-    const key = `jobs/${jobId}/input/${randomUUID()}-${image.name}`;
-    const url = await uploadToR2(key, buffer, image.type);
-    imageUrls.push(url);
+  try {
+    // Upload all images to R2
+    const imageUrls: string[] = [];
+    for (const image of images) {
+      const buffer = Buffer.from(await image.arrayBuffer());
+      const key = `jobs/${jobId}/input/${randomUUID()}-${image.name}`;
+      const url = await uploadToR2(key, buffer, image.type);
+      imageUrls.push(url);
+    }
+
+    // Save initial job state to Redis
+    await setJob(jobId, {
+      email,
+      music,
+      imageUrls,
+      restoredUrls: [],
+      clipUrls: [],
+      total: images.length,
+      phase: "restoring",
+      currentIndex: 0,
+    });
+
+    // Kick off restoration of the first image — webhook chain handles the rest
+    await startRestoration(jobId, imageUrls[0], 0);
+
+    return NextResponse.json({ jobId });
+  } catch (err) {
+    console.error("Submit error:", err);
+    return NextResponse.json({ error: String(err) }, { status: 500 });
   }
-
-  // Save initial job state to Redis
-  await setJob(jobId, {
-    email,
-    music,
-    imageUrls,
-    restoredUrls: [],
-    clipUrls: [],
-    total: images.length,
-    phase: "restoring",
-    currentIndex: 0,
-  });
-
-  // Kick off restoration of the first image — webhook chain handles the rest
-  await startRestoration(jobId, imageUrls[0], 0);
-
-  return NextResponse.json({ jobId });
 }
