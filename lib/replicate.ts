@@ -19,7 +19,6 @@ export async function startAnimation(jobId: string, imageUrl: string, index: num
     input: {
       image: imageUrl,
       prompt: "Gentle cinematic life, subtle movement, soft natural lighting, warm nostalgic feel",
-      num_frames: 81,
     },
     webhook: webhookUrl,
     webhook_events_filter: ["completed"],
