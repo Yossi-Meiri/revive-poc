@@ -24,13 +24,19 @@ export async function POST(req: NextRequest) {
   if (!job) return NextResponse.json({ error: "Job not found" }, { status: 404 });
 
   if (step === "restore") {
-    // output is the restored image URL
-    const restoredUrl = Array.isArray(body.output) ? body.output[0] : body.output;
+    const tempUrl = Array.isArray(body.output) ? body.output[0] : body.output;
+
+    // Re-upload restored image to R2 so animation model can access it permanently
+    const imgRes = await fetch(tempUrl);
+    const imgBuffer = Buffer.from(await imgRes.arrayBuffer());
+    const imgKey = `jobs/${jobId}/restored/restored-${index}.png`;
+    const restoredUrl = await uploadToR2(imgKey, imgBuffer, "image/png");
+
     const restored = [...job.restoredUrls];
     restored[index] = restoredUrl;
     await setJob(jobId, { ...job, restoredUrls: restored });
 
-    // Start animation for this restored image
+    // Start animation with permanent R2 URL
     await startAnimation(jobId, restoredUrl, index);
 
   } else if (step === "animate") {
