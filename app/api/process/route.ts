@@ -12,7 +12,7 @@ async function restoreImage(imageUrl: string): Promise<string> {
   const output = await replicate.run(
     "tencentarc/gfpgan:0fbacf7afc6817f26a7f27e40408d7e74a0e24f0b1f0e49e39aa48f7c60ef600",
     { input: { img: imageUrl, version: "v1.4", scale: 2 } }
-  ) as string;
+  ) as unknown as string;
   return output;
 }
 
@@ -26,7 +26,7 @@ async function animateImage(imageUrl: string): Promise<string> {
         num_frames: 81,
       }
     }
-  ) as string;
+  ) as unknown as string;
   return output;
 }
 
