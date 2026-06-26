@@ -5,8 +5,8 @@ export const replicate = new Replicate({ auth: process.env.REPLICATE_API_TOKEN! 
 export async function startRestoration(jobId: string, imageUrl: string, index: number): Promise<void> {
   const webhookUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/api/webhook?jobId=${jobId}&index=${index}&step=restore`;
   await replicate.predictions.create({
-    version: "0fbacf7afc6817f26a7f27e40408d7e74a0e24f0b1f0e49e39aa48f7c60ef600",
-    input: { img: imageUrl, version: "v1.4", scale: 2 },
+    version: "cc4956dd26fa5a7185d5660cc9100fab1b8070a1d1654a8bb5eb6d443b020bb2",
+    input: { image: imageUrl, codeformer_fidelity: 0.7, background_enhance: true, face_upsample: true, upscale: 2 },
     webhook: webhookUrl,
     webhook_events_filter: ["completed"],
   });
