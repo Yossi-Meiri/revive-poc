@@ -53,6 +53,23 @@
   color: var(--color-bg);
 }
 
+.right {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.legalLink {
+  font-family: var(--font-body);
+  font-size: 0.8125rem;
+  color: rgba(250, 247, 242, 0.5);
+  transition: color 0.2s ease;
+}
+
+.legalLink:hover {
+  color: rgba(250, 247, 242, 0.8);
+}
+
 .copy {
   font-family: var(--font-body);
   font-size: 0.78rem;
@@ -64,6 +81,11 @@
 @media (max-width: 640px) {
   .nav {
     gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .right {
+    gap: 14px;
     flex-wrap: wrap;
   }
 }

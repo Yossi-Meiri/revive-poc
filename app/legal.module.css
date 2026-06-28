@@ -1,0 +1,136 @@
+/* Shared styles for Terms and Privacy pages */
+
+.page {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: clamp(56px, 10vh, 104px) clamp(24px, 5vw, 32px) clamp(72px, 12vh, 120px);
+}
+
+/* Header */
+.header {
+  margin-bottom: clamp(48px, 8vh, 72px);
+}
+
+.h1 {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: clamp(2.6rem, 6vw, 4rem);
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+  margin: 0 0 24px;
+  color: var(--color-ink);
+}
+
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 28px;
+  font-family: var(--font-body);
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  color: rgba(26, 26, 26, 0.5);
+}
+
+.metaKey {
+  font-weight: 500;
+  color: rgba(26, 26, 26, 0.7);
+}
+
+.intro {
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.7;
+  color: rgba(26, 26, 26, 0.78);
+  margin: 28px 0 0;
+}
+
+/* Sections */
+.section {
+  margin-bottom: clamp(40px, 6vh, 56px);
+}
+
+.sectionLast {
+  margin-bottom: clamp(48px, 7vh, 64px);
+}
+
+.h2 {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: clamp(1.55rem, 3vw, 2rem);
+  line-height: 1.2;
+  margin: 0 0 20px;
+  padding-left: 18px;
+  border-left: 2px solid var(--color-amber);
+  color: var(--color-ink);
+}
+
+.p {
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.7;
+  color: rgba(26, 26, 26, 0.78);
+  margin: 0 0 16px;
+}
+
+.p:last-child {
+  margin-bottom: 0;
+}
+
+.ul {
+  margin: 0 0 16px;
+  padding-left: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.ul:last-child {
+  margin-bottom: 0;
+}
+
+.ol {
+  margin: 0 0 16px;
+  padding-left: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.ol:last-child {
+  margin-bottom: 0;
+}
+
+.li {
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.7;
+  color: rgba(26, 26, 26, 0.78);
+}
+
+.strong {
+  font-weight: 600;
+  color: var(--color-ink);
+}
+
+.link {
+  color: var(--color-amber);
+  border-bottom: 1px solid rgba(196, 132, 58, 0.4);
+  transition: border-color 0.2s ease;
+}
+
+.link:hover {
+  border-color: var(--color-amber);
+}
+
+/* Footer note */
+.footerNote {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 1.15rem;
+  line-height: 1.5;
+  color: rgba(26, 26, 26, 0.6);
+  margin: 0;
+  padding-top: clamp(28px, 4vh, 36px);
+  border-top: 1px solid rgba(26, 26, 26, 0.1);
+  text-align: center;
+}
