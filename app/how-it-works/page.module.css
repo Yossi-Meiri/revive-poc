@@ -1,14 +1,4 @@
 /* ── Keyframes ──────────────────────────────────────────── */
-@keyframes kenburns {
-  0%   { transform: scale(1.03) translate(0, 0); }
-  50%  { transform: scale(1.12) translate(-1.6%, -1.4%); }
-  100% { transform: scale(1.03) translate(0, 0); }
-}
-@keyframes scrub {
-  0%   { width: 0%; }
-  92%  { width: 100%; }
-  100% { width: 100%; }
-}
 @keyframes msgfade {
   0%,  12% { opacity: 0; transform: translateY(10px); }
   34%, 72% { opacity: 1; transform: translateY(0); }

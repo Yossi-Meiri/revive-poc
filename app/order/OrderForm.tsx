@@ -24,8 +24,10 @@ export default function OrderForm() {
   const [mood, setMood] = useState('Warm & Joyful');
   const [message, setMessage] = useState('');
   const [email, setEmail] = useState('');
+  const [file, setFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
   const [dragover, setDragover] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Pre-select package from URL ?package=
@@ -34,9 +36,10 @@ export default function OrderForm() {
     if (p && prices[p] != null) setPkg(p);
   }, [params]);
 
-  const handleFile = useCallback((file: File) => {
-    if (!file.type.startsWith('image/')) return;
-    const url = URL.createObjectURL(file);
+  const handleFile = useCallback((f: File) => {
+    if (!f.type.startsWith('image/')) return;
+    setFile(f);
+    const url = URL.createObjectURL(f);
     setPreview(url);
   }, []);
 
@@ -65,8 +68,26 @@ export default function OrderForm() {
       ? { background: 'var(--color-amber)', borderColor: 'var(--color-amber)', color: 'var(--color-bg)' }
       : { background: 'transparent', borderColor: 'rgba(26,22,20,0.18)', color: 'rgba(26,22,20,0.78)' };
 
-  const handleSubmit = () => {
-    alert(`Taking you to secure checkout for your $${prices[pkg]} film.`);
+  const handleSubmit = async () => {
+    if (!email || !file) {
+      alert('Please add your photo and email before submitting.');
+      return;
+    }
+    setSubmitting(true);
+    try {
+      const body = new FormData();
+      body.append('email', email);
+      body.append('music', mood);
+      body.append('images', file, file.name);
+
+      const res = await fetch('/api/submit', { method: 'POST', body });
+      if (!res.ok) throw new Error(await res.text());
+      const { jobId } = await res.json();
+      window.location.href = `/status?jobId=${jobId}`;
+    } catch (err) {
+      alert(`Something went wrong: ${err instanceof Error ? err.message : String(err)}`);
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -131,7 +152,8 @@ export default function OrderForm() {
             onClick={(e) => e.stopPropagation()}
           />
           {preview ? (
-            /* eslint-disable-next-line @next/next/no-img-element */
+            // next/image cannot load blob: URLs — raw <img> is correct here
+            // eslint-disable-next-line @next/next/no-img-element
             <img src={preview} alt="Your uploaded photo" className={styles.uploadPreview} />
           ) : (
             <>
@@ -221,8 +243,8 @@ export default function OrderForm() {
       </div>
 
       {/* ── 7. Submit ── */}
-      <button className={styles.submitBtn} onClick={handleSubmit}>
-        Order My Film — ${prices[pkg]}
+      <button className={styles.submitBtn} onClick={handleSubmit} disabled={submitting}>
+        {submitting ? 'Submitting…' : `Order My Film — $${prices[pkg]}`}
       </button>
       <p className={styles.submitNote}>
         Secure payment via Stripe. You&rsquo;ll receive your film within 24 hours.
